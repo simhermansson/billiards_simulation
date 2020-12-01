@@ -17,12 +17,12 @@ if __name__ == '__main__':
     cue = cue.Cue()
 
     sprite_group = pygame.sprite.Group()
-    b1 = ball.Ball(pool_table, 220, 110, True)
-    b2 = ball.Ball(pool_table, 370, 350, True)
-    #b3 = ball.Ball(pool_table, 250, 210, True)
+    b1 = ball.Ball(pool_table, 700, 110, True)
+    b2 = ball.Ball(pool_table, 770, 350, True)
+    b3 = ball.Ball(pool_table, 750, 210, True)
     sprite_group.add(b1)
     sprite_group.add(b2)
-    #sprite_group.add(b3)
+    sprite_group.add(b3)
 
     running = True
     while running:
@@ -44,9 +44,10 @@ if __name__ == '__main__':
         collided = dict()
         for a in sprite_group:
             for b in sprite_group:
-                if a != b and pygame.sprite.collide_circle(a, b) and b not in collided.get(a, []):
+                if a != b and ball.overlap(a, b) and b not in collided.get(a, []):
                     collided[b] = collided.get(b, []) + [a]
                     ball.collision(a, b)
+                    print("Crash bang oww!")
 
         pygame.display.update()
         clock.tick(60)

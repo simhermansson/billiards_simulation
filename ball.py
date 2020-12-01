@@ -51,10 +51,6 @@ class Ball(pygame.sprite.Sprite):
         self.dx = dx
         self.dy = dy
 
-    def set_position(self, x, y):
-        self.rect.x = x
-        self.rect.y = y
-
     def get_center_x(self):
         return self.rect.centerx
 
@@ -71,11 +67,11 @@ class Ball(pygame.sprite.Sprite):
         return self.dy
 
     def get_movement_angle(self):
-        return -math.atan2(self.dy, self.dx)
+        return math.atan2(self.dy, self.dx)
 
 
 def get_contact_angle(a, b):
-    return -math.atan2(b.get_center_y() - a.get_center_y(), b.get_center_x() - a.get_center_x())
+    return math.atan2(b.get_center_y() - a.get_center_y(), b.get_center_x() - a.get_center_x())
 
 
 def get_collision_values(a, b, contact_angle):
@@ -85,25 +81,36 @@ def get_collision_values(a, b, contact_angle):
     ady = b.get_velocity() * math.cos(b.get_movement_angle() - contact_angle) * math.sin(contact_angle) \
           + a.get_velocity() * math.sin(a.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi / 2)
 
-    return adx, ady
+    bdx = (a.get_velocity() * math.cos(a.get_movement_angle() - contact_angle) * math.cos(contact_angle)
+           + b.get_velocity() * math.sin(b.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi / 2))
+
+    bdy = (a.get_velocity() * math.cos(a.get_movement_angle() - contact_angle) * math.sin(contact_angle)
+           + b.get_velocity() * math.sin(b.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi / 2))
+
+    return adx, ady, bdx, bdy
+
+
+def distance(a, b):
+    return math.sqrt((a.get_center_x() - b.get_center_x())**2 + (a.get_center_y() - b.get_center_y())**2)
+
+
+def overlap(a, b):
+    return distance(a, b) <= 20 * 2
 
 
 def collision(a, b):
     contact_angle = get_contact_angle(a, b)
 
-    print(get_contact_angle(a, b))
-    print(get_contact_angle(b, a))
+    a.rect.x -= a.get_velocity_x()
+    a.rect.y -= a.get_velocity_y()
+    b.rect.x -= b.get_velocity_x()
+    b.rect.y -= b.get_velocity_y()
 
-    adx, ady = get_collision_values(a, b, contact_angle)
-    bdx, bdy = get_collision_values(b, a, contact_angle)
-
-    print(a.get_velocity_x(), adx)
-    print(a.get_velocity_y(), ady)
-    print("---")
-    print(b.get_velocity_x(), bdx)
-    print(b.get_velocity_y(), bdy)
+    adx, ady, bdx, bdy = get_collision_values(a, b, contact_angle)
+    #bdx, bdy = get_collision_values(b, a, contact_angle)
 
     totx = a.get_velocity_x() + b.get_velocity_x()
     toty = a.get_velocity_y() + b.get_velocity_y()
+
     a.set_velocity(adx, ady)
-    b.set_velocity(totx - adx, toty - ady)
+    b.set_velocity(bdx, bdy)
