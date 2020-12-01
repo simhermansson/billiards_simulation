@@ -10,16 +10,19 @@ if __name__ == '__main__':
     game_display = pygame.display.set_mode((1600, 900))
     pygame.display.set_caption("Pool")
     clock = pygame.time.Clock()
+    pygame.mouse.set_visible(False)
 
     # Game specific variables
     pool_table = pool_table.PoolTable(game_display.get_width(), game_display.get_height())
     cue = cue.Cue()
 
     sprite_group = pygame.sprite.Group()
-    b1 = ball.Ball(pool_table, 330, 110)
-    b2 = ball.Ball(pool_table, 370, 350)
+    b1 = ball.Ball(pool_table, 220, 110, True)
+    b2 = ball.Ball(pool_table, 370, 350, True)
+    #b3 = ball.Ball(pool_table, 250, 210, True)
     sprite_group.add(b1)
     sprite_group.add(b2)
+    #sprite_group.add(b3)
 
     running = True
     while running:
@@ -38,9 +41,11 @@ if __name__ == '__main__':
         sprite_group.draw(game_display)
         cue.draw(game_display, sprite_group)
 
+        collided = dict()
         for a in sprite_group:
             for b in sprite_group:
-                if a != b and pygame.sprite.collide_circle(a, b):
+                if a != b and pygame.sprite.collide_circle(a, b) and b not in collided.get(a, []):
+                    collided[b] = collided.get(b, []) + [a]
                     ball.collision(a, b)
 
         pygame.display.update()

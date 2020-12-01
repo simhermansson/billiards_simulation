@@ -10,7 +10,9 @@ class Cue(pygame.sprite.Sprite):
         self.y = 0
 
     def update(self, *args, **kwargs) -> None:
-        self.x, self.y = pygame.mouse.get_pos()
+        left = pygame.mouse.get_pressed(num_buttons=3)
+        if True:
+            self.x, self.y = pygame.mouse.get_pos()
 
     def draw(self, screen, ball_group):
         nearest_ball = None
@@ -23,18 +25,18 @@ class Cue(pygame.sprite.Sprite):
 
         if nearest_ball:
             angle = self.get_angle(nearest_ball)
-            front_width = 3
+            front_width = 2
             back_width = 5
 
-            back_left = (self.x - 80 * math.cos(angle) + back_width * math.cos(angle + math.pi / 2),
-                         self.y - 80 * math.sin(angle) + back_width * math.sin(angle + math.pi / 2))
-            back_right = (self.x - 80 * math.cos(angle) - back_width * math.cos(angle + math.pi / 2),
-                          self.y - 80 * math.sin(angle) - back_width * math.sin(angle + math.pi / 2))
+            back_left = (self.x - 250 * math.cos(angle) + back_width * math.cos(angle + math.pi / 2),
+                         self.y - 250 * math.sin(angle) + back_width * math.sin(angle + math.pi / 2))
+            back_right = (self.x - 250 * math.cos(angle) - back_width * math.cos(angle + math.pi / 2),
+                          self.y - 250 * math.sin(angle) - back_width * math.sin(angle + math.pi / 2))
 
-            front_left = (self.x + 60 * math.cos(angle) + front_width * math.cos(angle + math.pi / 2),
-                          self.y + 60 * math.sin(angle) + front_width * math.sin(angle + math.pi / 2))
-            front_right = (self.x + 60 * math.cos(angle) - front_width * math.cos(angle + math.pi / 2),
-                           self.y + 60 * math.sin(angle) - front_width * math.sin(angle + math.pi / 2))
+            front_left = (self.x + 100 * math.cos(angle) + front_width * math.cos(angle + math.pi / 2),
+                          self.y + 100 * math.sin(angle) + front_width * math.sin(angle + math.pi / 2))
+            front_right = (self.x + 100 * math.cos(angle) - front_width * math.cos(angle + math.pi / 2),
+                           self.y + 100 * math.sin(angle) - front_width * math.sin(angle + math.pi / 2))
 
             pygame.gfxdraw.aapolygon(screen, [back_right, back_left, front_left, front_right], (66, 13, 9))
             pygame.gfxdraw.filled_polygon(screen, [back_right, back_left, front_left, front_right], (66, 13, 9))
