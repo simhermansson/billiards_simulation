@@ -1,6 +1,13 @@
 import pygame
 import pygame.gfxdraw
 import math
+from enum import Enum
+
+
+class State(Enum):
+    DRAWING = 1
+    SHOOTING = 2
+    AIMING = 3
 
 
 class Cue(pygame.sprite.Sprite):
@@ -8,13 +15,29 @@ class Cue(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.x = 0
         self.y = 0
+        self.drawing = False
+        self.draw_distance = 0
+        self.nearest_ball = None
 
     def update(self, *args, **kwargs) -> None:
-        left = pygame.mouse.get_pressed(num_buttons=3)
-        if True:
-            self.x, self.y = pygame.mouse.get_pos()
+        ball_group = args[0]
+        self.nearest_ball = self.get_nearest_ball(ball_group)
+        left, middle, right = pygame.mouse.get_pressed(num_buttons=3)
+        if self.drawing:
+            if left:
+                self.draw_distance = 30
+                self.x, self.y = pygame.mouse.get_pos()
+            else:
+                self.drawing = False
+                self.x, self.y = pygame.mouse.get_pos()
+        else:
+            if left:
+                self.drawing = True
+                self.x, self.y = pygame.mouse.get_pos()
+            else:
+                self.x, self.y = pygame.mouse.get_pos()
 
-    def draw(self, screen, ball_group):
+    def get_nearest_ball(self, ball_group):
         nearest_ball = None
         ball_distance = 0
         for ball in ball_group:
@@ -22,9 +45,11 @@ class Cue(pygame.sprite.Sprite):
             if nearest_ball is None or dist < ball_distance:
                 nearest_ball = ball
                 ball_distance = dist
+        return nearest_ball
 
-        if nearest_ball:
-            angle = self.get_angle(nearest_ball)
+    def draw(self, screen):
+        if self.nearest_ball:
+            angle = self.get_angle(self.nearest_ball)
             front_width = 2
             back_width = 5
             cue_length = 400

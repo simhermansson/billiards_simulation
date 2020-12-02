@@ -35,12 +35,12 @@ if __name__ == '__main__':
 
         sprite_group.update()
         pool_table.update(sprite_group)
-        cue.update()
+        cue.update(sprite_group)
 
         game_display.fill("GRAY")
         pool_table.draw(game_display)
         sprite_group.draw(game_display)
-        cue.draw(game_display, sprite_group)
+        cue.draw(game_display)
 
         collided = dict()
         for a in sprite_group:
