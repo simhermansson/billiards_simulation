@@ -21,16 +21,12 @@ if __name__ == '__main__':
     cue = cue.Cue()
 
     # Spawn balls.
-    sprite_group = pygame.sprite.Group()
     b1 = ball.Ball(pool_table, 800, 400, "red")
-
     b2 = ball.Ball(pool_table, 770, 360, "blue")
     b3 = ball.Ball(pool_table, 830, 360, "green")
-
     b4 = ball.Ball(pool_table, 800, 310, "black")
     b5 = ball.Ball(pool_table, 750, 310, "brown")
     b6 = ball.Ball(pool_table, 850, 310, "pink")
-
     white = ball.Ball(pool_table, 800, 700, "white")
 
     sprite_group = pygame.sprite.Group()
@@ -44,23 +40,27 @@ if __name__ == '__main__':
 
     running = True
     while running:
-
         delta_time = clock.tick(60) / 10
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.BUTTON_LEFT:
-                pass
 
+        # Update game.
         sprite_group.update(delta_time)
         pool_table.update(sprite_group)
         cue.update(sprite_group)
 
+        # Draw game.
         game_display.fill("GRAY")
         pool_table.draw(game_display)
         cue.draw(game_display)
 
+        """
+        Checks collisions between balls, maintains a dict during this update, so the collision
+        between ball a and b only happens once, and the collision between ball b and a is not
+        handled separately.
+        """
         collided = dict()
         for a in sprite_group:
             for b in sprite_group:

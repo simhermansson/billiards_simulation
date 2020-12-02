@@ -6,6 +6,14 @@ import math
 
 class Ball(pygame.sprite.Sprite):
     def __init__(self, table: pool_table, x: int, y: int, color):
+        """
+        The ball objects belong to a pygame.sprite.Group and can be pushed around on a pool table.
+
+        :param table: The pool table the ball belongs to.
+        :param x: X-position of ball
+        :param y: Y-position of ball
+        :param color: Color of ball
+        """
         pygame.sprite.Sprite.__init__(self)
 
         self.px = x
@@ -26,6 +34,8 @@ class Ball(pygame.sprite.Sprite):
     def update(self, *args, **kwargs) -> None:
         """
         Updates the values for ball. Applies friction and handles wall-collisions.
+
+        :param args: args[0]: DeltaTime, time since last tick.
         """
         dt = args[0]
         self.px += self.dx * dt
@@ -54,6 +64,11 @@ class Ball(pygame.sprite.Sprite):
         return math.atan2(self.dy, self.dx)
 
     def draw_self(self, display):
+        """
+        Draws both anti-aliased edge and a filled polygon to get an anti-aliased circle.
+
+        :param display: Game screen to draw on.
+        """
         pygame.gfxdraw.aacircle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
         pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
 
@@ -95,16 +110,16 @@ def collision(a, b):
     contact_angle = get_contact_angle(a, b)
 
     adx = (b.get_velocity() * math.cos(b.get_movement_angle() - contact_angle) * math.cos(contact_angle)
-          + a.get_velocity() * math.sin(a.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi / 2))
+           + a.get_velocity() * math.sin(a.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi/2))
 
     ady = (b.get_velocity() * math.cos(b.get_movement_angle() - contact_angle) * math.sin(contact_angle)
-          + a.get_velocity() * math.sin(a.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi / 2))
+           + a.get_velocity() * math.sin(a.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi/2))
 
     bdx = (a.get_velocity() * math.cos(a.get_movement_angle() - contact_angle) * math.cos(contact_angle)
-           + b.get_velocity() * math.sin(b.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi / 2))
+           + b.get_velocity() * math.sin(b.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi/2))
 
     bdy = (a.get_velocity() * math.cos(a.get_movement_angle() - contact_angle) * math.sin(contact_angle)
-           + b.get_velocity() * math.sin(b.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi / 2))
+           + b.get_velocity() * math.sin(b.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi/2))
 
     a.dx = adx
     a.dy = ady

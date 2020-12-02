@@ -11,7 +11,11 @@ class State(Enum):
 
 class Cue(pygame.sprite.Sprite):
     def __init__(self):
+        """
+        The cue object can push balls.
+        """
         pygame.sprite.Sprite.__init__(self)
+
         self.x = 0
         self.y = 0
         self.draw_distance = 0

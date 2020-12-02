@@ -34,6 +34,12 @@ class PoolPocket(pygame.sprite.Sprite):
 
 class PoolTable(pygame.sprite.Sprite):
     def __init__(self, screen_width: int, screen_height: int):
+        """
+        The pool table provides the table where the balls can be and interact with each other.
+
+        :param screen_width: In pixels.
+        :param screen_height: In pixels.
+        """
         pygame.sprite.Sprite.__init__(self)
 
         self.EDGE_BORDER = screen_width // 10
@@ -59,6 +65,10 @@ class PoolTable(pygame.sprite.Sprite):
         self.pocket_group.add(PoolPocket(self.rect.right, self.rect.bottom))
 
     def update(self, balls):
+        """
+        Checks to see if any balls are in the pocket, if so, kill it.
+        :param balls: pygame.sprite.Group of balls.
+        """
         for pocket in self.pocket_group:
             for ball in balls:
                 if pocket.overlap(ball):
