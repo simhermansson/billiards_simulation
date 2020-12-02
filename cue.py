@@ -19,6 +19,14 @@ class Cue(pygame.sprite.Sprite):
         self.state = State.AIMING
 
     def update(self, *args, **kwargs) -> None:
+        """
+        Updates the nearest ball by calling get_nearest_ball.
+        Handles the state of the cue, either drawing it back or aiming it.
+        Handles the shooting, so if it is released while it is in State.DRAWING,
+        it shoots the ball away.
+
+        :param args: args[0]: pygame.sprite.Group of Balls.
+        """
         ball_group = args[0]
         self.nearest_ball = self.get_nearest_ball(ball_group)
 
@@ -42,6 +50,11 @@ class Cue(pygame.sprite.Sprite):
                     self.state = State.DRAWING
 
     def get_nearest_ball(self, ball_group):
+        """
+        Returns the nearest ball from the mouse position.
+
+        :param ball_group: pygame.sprite.Group of Balls.
+        """
         nearest_ball = None
         ball_distance = 0
         for ball in ball_group:
@@ -52,6 +65,12 @@ class Cue(pygame.sprite.Sprite):
         return nearest_ball
 
     def draw(self, screen):
+        """
+        Draws the cue by calculating four points, back_left, back_right, front_left and front_right.
+        These make up a polygon.
+
+        :param screen: Game screen to draw on.
+        """
         if self.nearest_ball:
             angle = self.get_angle(self.nearest_ball)
             front_width = 2
@@ -68,6 +87,7 @@ class Cue(pygame.sprite.Sprite):
             front_right = (self.x + math.cos(angle) - front_width * math.cos(angle + math.pi / 2),
                            self.y + math.sin(angle) - front_width * math.sin(angle + math.pi / 2))
 
+            # Draws both anti-aliased edge and a filled polygon to get an anti-aliased circle.
             pygame.gfxdraw.aapolygon(screen, [back_right, back_left, front_left, front_right], (66, 13, 9))
             pygame.gfxdraw.filled_polygon(screen, [back_right, back_left, front_left, front_right], (66, 13, 9))
 

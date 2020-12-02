@@ -38,13 +38,13 @@ class Ball(pygame.sprite.Sprite):
         if abs(self.dy) < 0.1:
             self.dy = 0
 
-        if self.px - Ball.get_radius() <= self.table.get_left_edge():
+        if self.px - Ball.get_radius() < self.table.get_left_edge():
             self.dx = -self.dx
-        if self.px + Ball.get_radius() >= self.table.get_right_edge():
+        if self.px + Ball.get_radius() > self.table.get_right_edge():
             self.dx = -self.dx
-        if self.py - Ball.get_radius() <= self.table.get_top_edge():
+        if self.py - Ball.get_radius() < self.table.get_top_edge():
             self.dy = -self.dy
-        if self.py + Ball.get_radius() >= self.table.get_bottom_edge():
+        if self.py + Ball.get_radius() > self.table.get_bottom_edge():
             self.dy = -self.dy
 
     def get_velocity(self):
