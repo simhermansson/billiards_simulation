@@ -1,7 +1,6 @@
 import pygame
 import pygame.gfxdraw
 import pool_table
-import random
 import math
 
 
@@ -73,6 +72,7 @@ class Ball(pygame.sprite.Sprite):
         return math.atan2(self.dy, self.dx)
 
     def draw_self(self, display):
+        # Draws both anti-aliased edge and a filled polygon to get an anti-aliased circle.
         pygame.gfxdraw.aacircle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
         pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
 
