@@ -11,7 +11,7 @@ class Ball(pygame.sprite.Sprite):
 
         self.table = table
 
-        self.RADIUS = 20    # mm
+        self.RADIUS = Ball.get_radius()    # mm
         self.MASS = 0.16   # kg
 
         self.image = pygame.Surface([self.RADIUS*2 + 1, self.RADIUS*2 + 1], pygame.SRCALPHA)
@@ -30,22 +30,26 @@ class Ball(pygame.sprite.Sprite):
         pygame.gfxdraw.filled_circle(self.image, self.image.get_rect().centerx, self.image.get_rect().centery,
                                      self.RADIUS, (255, 255, 255))
 
+    @staticmethod
+    def get_radius():
+        return 20
+
     def update(self, *args, **kwargs) -> None:
         self.rect.x += self.dx
         self.rect.y += self.dy
 
         if self.rect.left < self.table.get_left_edge():
             self.dx = -self.dx
-            self.rect.x += 2 * (self.table.get_left_edge() - self.rect.left)
-        elif self.rect.right > self.table.get_right_edge():
+            self.rect.x += 2 * self.dx
+        if self.rect.right > self.table.get_right_edge():
             self.dx = -self.dx
-            self.rect.x -= 2 * (self.rect.right - self.table.get_right_edge())
-        elif self.rect.top < self.table.get_top_edge():
+            self.rect.x += 2 * self.dx
+        if self.rect.top < self.table.get_top_edge():
             self.dy = -self.dy
-            self.rect.y += 2 * (self.table.get_top_edge() - self.rect.top)
-        elif self.rect.bottom > self.table.get_bottom_edge():
+            self.rect.y += 2 * self.dy
+        if self.rect.bottom > self.table.get_bottom_edge():
             self.dy = -self.dy
-            self.rect.y -= 2 * (self.rect.bottom - self.table.get_bottom_edge())
+            self.rect.y += 2 * self.dy
 
     def set_velocity(self, dx, dy):
         self.dx = dx
@@ -95,7 +99,7 @@ def distance(a, b):
 
 
 def overlap(a, b):
-    return distance(a, b) <= 20 * 2
+    return distance(a, b) <= Ball.get_radius() * 2
 
 
 def collision(a, b):

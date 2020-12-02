@@ -1,5 +1,6 @@
 import pygame
 import pygame.gfxdraw
+import math
 
 
 class PoolPocket(pygame.sprite.Sprite):
@@ -19,6 +20,12 @@ class PoolPocket(pygame.sprite.Sprite):
                                 self.RADIUS, (0, 0, 0))
         pygame.gfxdraw.filled_circle(self.image, self.image.get_rect().centerx, self.image.get_rect().centery,
                                      self.RADIUS, (0, 0, 0))
+
+    def distance(self, ball):
+        return math.sqrt((self.rect.centerx - ball.get_center_x())**2 + (self.rect.centery - ball.get_center_y())**2)
+
+    def overlap(self, b):
+        return self.distance(b) <= self.get_radius()
 
     @staticmethod
     def get_radius():
@@ -49,6 +56,12 @@ class PoolTable(pygame.sprite.Sprite):
         self.pocket_group.add(PoolPocket(self.rect.right, self.rect.top))
         self.pocket_group.add(PoolPocket(self.rect.right, self.rect.centery))
         self.pocket_group.add(PoolPocket(self.rect.right, self.rect.bottom))
+
+    def update(self, balls):
+        for pocket in self.pocket_group:
+            for ball in balls:
+                if pocket.overlap(ball):
+                    ball.kill()
 
     def draw(self, screen):
         screen.blit(self.border, self.border_rect)

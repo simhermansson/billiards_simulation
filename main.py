@@ -34,6 +34,7 @@ if __name__ == '__main__':
                 pass
 
         sprite_group.update()
+        pool_table.update(sprite_group)
         cue.update()
 
         game_display.fill("GRAY")
@@ -50,4 +51,4 @@ if __name__ == '__main__':
                     print("Crash bang oww!")
 
         pygame.display.update()
-        clock.tick(60)
+        delta_time = clock.tick(60)
