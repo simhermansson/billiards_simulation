@@ -6,36 +6,20 @@ import math
 
 
 class Ball(pygame.sprite.Sprite):
-    def __init__(self, table: pool_table, x: int, y: int, random_speed=False):
+    def __init__(self, table: pool_table, x: int, y: int, color):
         pygame.sprite.Sprite.__init__(self)
 
-        # FLOAT COORDS
+        # Float coordinates.
         self.px = x
         self.py = y
-        self.rect = pygame.Rect(x, y, Ball.get_radius(), Ball.get_radius())
+        self.dx = 0
+        self.dy = 0
 
         self.table = table
-
-        self.RADIUS = Ball.get_radius()    # mm
-        self.MASS = 0.16   # kg
-
-        #self.image = pygame.Surface([self.RADIUS*2 + 1, self.RADIUS*2 + 1], pygame.SRCALPHA)
-
-        if random_speed:
-            self.dx = random.randint(0, 0)
-            self.dy = random.randint(0, 0)
-        else:
-            self.dx = 0
-            self.dy = 0
-
-        #self.rect = self.image.get_rect(center=(x, y))
-
-        """
-        pygame.gfxdraw.aacircle(self.image, self.image.get_rect().centerx, self.image.get_rect().centery,
-                                self.RADIUS, (255, 255, 255))
-        pygame.gfxdraw.filled_circle(self.image, self.image.get_rect().centerx, self.image.get_rect().centery,
-                                     self.RADIUS, (255, 255, 255))
-        """
+        self.color = color
+        self.rect = pygame.Rect(x, y, Ball.get_radius(), Ball.get_radius())
+        self.RADIUS = Ball.get_radius()
+        self.MASS = 0.16
 
     @staticmethod
     def get_radius():
@@ -88,8 +72,8 @@ class Ball(pygame.sprite.Sprite):
         return math.atan2(self.dy, self.dx)
 
     def draw_self(self, display):
-        pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color("RED"))
-        pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), 5, pygame.Color("WHITE"))
+        pygame.gfxdraw.aacircle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
+        pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
 
 
 """
