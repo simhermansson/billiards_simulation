@@ -40,13 +40,15 @@ if __name__ == '__main__':
     running = True
     while running:
 
+        delta_time = clock.tick(60) / 10
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.BUTTON_LEFT:
                 pass
 
-        sprite_group.update()
+        sprite_group.update(delta_time)
         pool_table.update(sprite_group)
         cue.update(sprite_group)
 
@@ -67,4 +69,3 @@ if __name__ == '__main__':
             b.draw_self(game_display)
 
         pygame.display.update()
-        delta_time = clock.tick(60)

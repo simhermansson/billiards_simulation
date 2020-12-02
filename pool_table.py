@@ -25,7 +25,7 @@ class PoolPocket(pygame.sprite.Sprite):
         return math.sqrt((self.rect.centerx - ball.get_center_x())**2 + (self.rect.centery - ball.get_center_y())**2)
 
     def overlap(self, b):
-        return self.distance(b) <= self.get_radius() * 2
+        return self.distance(b) <= self.get_radius()
 
     @staticmethod
     def get_radius():

@@ -26,8 +26,9 @@ class Ball(pygame.sprite.Sprite):
         return 20
 
     def update(self, *args, **kwargs) -> None:
-        self.px += self.dx
-        self.py += self.dy
+        dt = args[0]
+        self.px += self.dx * dt
+        self.py += self.dy * dt
 
         self.dx = self.dx * (1 - self.table.get_friction())
         self.dy = self.dy * (1 - self.table.get_friction())
@@ -76,12 +77,6 @@ class Ball(pygame.sprite.Sprite):
         pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
 
 
-"""
-def get_contact_angle(a, b):
-    return math.atan2(b.get_center_y() - a.get_center_y(), b.get_center_x() - a.get_center_x())
-"""
-
-
 def get_contact_angle(a, b):
     return math.atan2(b.py - a.py, b.px - a.px)
 
@@ -106,11 +101,6 @@ def collision(a, b):
     a.dy = ady
     b.dx = bdx
     b.dy = bdy
-
-"""
-def distance(a, b):
-    return math.sqrt((a.get_center_x() - b.get_center_x())**2 + (a.get_center_y() - b.get_center_y())**2)
-"""
 
 
 def distance(a, b):
