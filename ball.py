@@ -45,8 +45,12 @@ class Ball(pygame.sprite.Sprite):
         self.px += self.dx
         self.py += self.dy
 
-        self.dx = 1 - self.table.get_friction()
-        self.dy = 1 - self.table.get_friction()
+        self.dx = self.dx * (1 - self.table.get_friction())
+        self.dy = self.dy * (1 - self.table.get_friction())
+        if abs(self.dx) < 0.1:
+            self.dx = 0
+        if abs(self.dy) < 0.1:
+            self.dy = 0
 
         if self.px - Ball.get_radius() < self.table.get_left_edge():
             self.dx = -self.dx
