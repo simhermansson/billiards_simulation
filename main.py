@@ -3,6 +3,12 @@ import ball
 import pool_table
 import cue
 
+"""
+Simulates a billiards game, where balls interact with each other through elastic collisions with the effect
+of friction. To set a ball in motion, place the cursor near the ball you want fired and take aim.
+The force applied grows as the distance from the ball and cue increases.
+
+"""
 
 if __name__ == '__main__':
     pygame.init()
@@ -54,7 +60,6 @@ if __name__ == '__main__':
 
         game_display.fill("GRAY")
         pool_table.draw(game_display)
-        #sprite_group.draw(game_display)
         cue.draw(game_display)
 
         collided = dict()
@@ -63,7 +68,6 @@ if __name__ == '__main__':
                 if a != b and ball.overlaps(a, b) and b not in collided.get(a, []):
                     collided[b] = collided.get(b, []) + [a]
                     ball.collision(a, b)
-                    #print("Crash bang oww!")
 
         for b in sprite_group:
             b.draw_self(game_display)

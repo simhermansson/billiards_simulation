@@ -1,7 +1,6 @@
 import pygame
 import pygame.gfxdraw
 import pool_table
-import random
 import math
 
 
@@ -9,7 +8,6 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self, table: pool_table, x: int, y: int, color):
         pygame.sprite.Sprite.__init__(self)
 
-        # Float coordinates.
         self.px = x
         self.py = y
         self.dx = 0
@@ -26,6 +24,9 @@ class Ball(pygame.sprite.Sprite):
         return 20
 
     def update(self, *args, **kwargs) -> None:
+        """
+        Updates the values for ball. Applies friction and wall-collision checking.
+        """
         dt = args[0]
         self.px += self.dx * dt
         self.py += self.dy * dt
@@ -37,16 +38,29 @@ class Ball(pygame.sprite.Sprite):
         if abs(self.dy) < 0.1:
             self.dy = 0
 
-        if self.px - Ball.get_radius() < self.table.get_left_edge():
+        if self.px - Ball.get_radius() <= self.table.get_left_edge():
             self.dx = -self.dx
-        if self.px + Ball.get_radius() > self.table.get_right_edge():
+        if self.px + Ball.get_radius() >= self.table.get_right_edge():
             self.dx = -self.dx
-        if self.py - Ball.get_radius() < self.table.get_top_edge():
+        if self.py - Ball.get_radius() <= self.table.get_top_edge():
             self.dy = -self.dy
-        if self.py + Ball.get_radius() > self.table.get_bottom_edge():
+        if self.py + Ball.get_radius() >= self.table.get_bottom_edge():
             self.dy = -self.dy
 
+    def get_velocity(self):
+        return math.sqrt(self.dx**2 + self.dy**2)
+
+    def get_movement_angle(self):
+        return math.atan2(self.dy, self.dx)
+
+    def draw_self(self, display):
+        pygame.gfxdraw.aacircle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
+        pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
+
     def apply_force(self, force, angle):
+        """
+        Applies a force to the ball which changes its velocity.
+        """
         self.dx += force * math.cos(angle)
         self.dy += force * math.sin(angle)
 
@@ -60,21 +74,13 @@ class Ball(pygame.sprite.Sprite):
     def get_center_y(self):
         return self.py
 
-    def get_velocity(self):
-        return math.sqrt(self.dx**2 + self.dy**2)
 
-    def get_velocity_x(self):
-        return self.dx
+def distance(a, b):
+    return math.sqrt((a.px - b.px)**2 + (a.py - b.py)**2)
 
-    def get_velocity_y(self):
-        return self.dy
 
-    def get_movement_angle(self):
-        return math.atan2(self.dy, self.dx)
-
-    def draw_self(self, display):
-        pygame.gfxdraw.aacircle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
-        pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
+def overlaps(a, b):
+    return distance(a, b) <= Ball.get_radius() * 2
 
 
 def get_contact_angle(a, b):
@@ -82,6 +88,9 @@ def get_contact_angle(a, b):
 
 
 def collision(a, b):
+    """
+    Implements elastic collisions between two ball objects through simple 2D-physics.
+    """
 
     contact_angle = get_contact_angle(a, b)
 
@@ -101,22 +110,3 @@ def collision(a, b):
     a.dy = ady
     b.dx = bdx
     b.dy = bdy
-
-
-def distance(a, b):
-    return math.sqrt((a.px - b.px)**2 + (a.py - b.py)**2)
-
-
-def overlaps(a, b):
-    return distance(a, b) <= Ball.get_radius() * 2
-
-
-def collision_wall(b):
-    if b.px - Ball.get_radius() <= b.table.get_left_edge():
-        b.dx = -b.dx
-    if b.px + Ball.get_radius() >= b.table.get_right_edge():
-        b.dx = -b.dx
-    if b.py - Ball.get_radius() <= b.table.get_top_edge():
-        b.dy = -b.dy
-    if b.py + Ball.get_radius() >= b.table.get_bottom_edge():
-        b.dy = -b.dy
