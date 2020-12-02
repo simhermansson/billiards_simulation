@@ -6,8 +6,7 @@ from enum import Enum
 
 class State(Enum):
     DRAWING = 1
-    SHOOTING = 2
-    AIMING = 3
+    AIMING = 2
 
 
 class Cue(pygame.sprite.Sprite):
@@ -15,27 +14,32 @@ class Cue(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.x = 0
         self.y = 0
-        self.drawing = False
         self.draw_distance = 0
         self.nearest_ball = None
+        self.state = State.AIMING
 
     def update(self, *args, **kwargs) -> None:
         ball_group = args[0]
         self.nearest_ball = self.get_nearest_ball(ball_group)
-        left, middle, right = pygame.mouse.get_pressed(num_buttons=3)
-        if self.drawing:
-            if left:
-                self.draw_distance = 30
+
+        if self.nearest_ball:
+            left, middle, right = pygame.mouse.get_pressed(num_buttons=3)
+
+            if self.state == State.DRAWING:
                 self.x, self.y = pygame.mouse.get_pos()
-            else:
-                self.drawing = False
+                if left:
+                    self.draw_distance = self.distance(self.nearest_ball)
+                else:
+                    angle = self.get_angle(self.nearest_ball)
+                    self.x = self.x + (self.draw_distance - self.nearest_ball.get_radius()) * math.cos(angle)
+                    self.y = self.y + (self.draw_distance - self.nearest_ball.get_radius()) * math.sin(angle)
+                    pygame.mouse.set_pos((self.x, self.y))
+                    self.nearest_ball.apply_force(self.draw_distance * 0.05, angle)
+                    self.state = State.AIMING
+            elif self.state == State.AIMING:
                 self.x, self.y = pygame.mouse.get_pos()
-        else:
-            if left:
-                self.drawing = True
-                self.x, self.y = pygame.mouse.get_pos()
-            else:
-                self.x, self.y = pygame.mouse.get_pos()
+                if left:
+                    self.state = State.DRAWING
 
     def get_nearest_ball(self, ball_group):
         nearest_ball = None

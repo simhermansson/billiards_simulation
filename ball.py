@@ -17,8 +17,8 @@ class Ball(pygame.sprite.Sprite):
         self.image = pygame.Surface([self.RADIUS*2 + 1, self.RADIUS*2 + 1], pygame.SRCALPHA)
 
         if random_speed:
-            self.dx = random.randint(0, 3)
-            self.dy = random.randint(0, 3)
+            self.dx = random.randint(0, 0)
+            self.dy = random.randint(0, 0)
         else:
             self.dx = 0
             self.dy = 0
@@ -50,6 +50,10 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.bottom > self.table.get_bottom_edge():
             self.dy = -self.dy
             self.rect.y += 2 * self.dy
+
+    def apply_force(self, force, angle):
+        self.dx += force * math.cos(angle)
+        self.dy += force * math.sin(angle)
 
     def set_velocity(self, dx, dy):
         self.dx = dx
