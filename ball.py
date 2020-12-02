@@ -25,7 +25,7 @@ class Ball(pygame.sprite.Sprite):
 
     def update(self, *args, **kwargs) -> None:
         """
-        Updates the values for ball. Applies friction and wall-collision checking.
+        Updates the values for ball. Applies friction and handles wall-collisions.
         """
         dt = args[0]
         self.px += self.dx * dt

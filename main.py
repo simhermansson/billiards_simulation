@@ -7,7 +7,6 @@ import cue
 Simulates a billiards game, where balls interact with each other through elastic collisions with the effect
 of friction. To set a ball in motion, place the cursor near the ball you want fired and take aim.
 The force applied grows as the distance from the ball and cue increases.
-
 """
 
 if __name__ == '__main__':
