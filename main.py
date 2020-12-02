@@ -5,17 +5,18 @@ import cue
 
 
 if __name__ == '__main__':
-    # Pygame code
     pygame.init()
     game_display = pygame.display.set_mode((1600, 900))
     pygame.display.set_caption("Pool")
     clock = pygame.time.Clock()
     pygame.mouse.set_visible(False)
 
-    # Game specific variables
+    # Game variables.
     pool_table = pool_table.PoolTable(game_display.get_width(), game_display.get_height())
     cue = cue.Cue()
 
+    # Spawn balls.
+    sprite_group = pygame.sprite.Group()
     b1 = ball.Ball(pool_table, 700, 110, True)
     b2 = ball.Ball(pool_table, 770, 350, True)
     b3 = ball.Ball(pool_table, 750, 210, True)
