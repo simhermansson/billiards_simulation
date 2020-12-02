@@ -17,12 +17,16 @@ if __name__ == '__main__':
 
     # Spawn balls.
     sprite_group = pygame.sprite.Group()
-    b1 = ball.Ball(pool_table, 700, 110, True)
-    b2 = ball.Ball(pool_table, 770, 350, True)
-    b3 = ball.Ball(pool_table, 750, 210, True)
-    b4 = ball.Ball(pool_table, 800, 110, True)
-    b5 = ball.Ball(pool_table, 800, 150, True)
-    b6 = ball.Ball(pool_table, 800, 300, True)
+    b1 = ball.Ball(pool_table, 800, 400, True)
+
+    b2 = ball.Ball(pool_table, 770, 360, True)
+    b3 = ball.Ball(pool_table, 830, 360, True)
+
+    b4 = ball.Ball(pool_table, 800, 310, True)
+    b5 = ball.Ball(pool_table, 750, 310, True)
+    b6 = ball.Ball(pool_table, 850, 310, True)
+
+    white = ball.Ball(pool_table, 800, 700, True)
 
     sprite_group = pygame.sprite.Group()
     sprite_group.add(b1)
@@ -31,6 +35,7 @@ if __name__ == '__main__':
     sprite_group.add(b4)
     sprite_group.add(b5)
     sprite_group.add(b6)
+    sprite_group.add(white)
 
     running = True
     while running:
