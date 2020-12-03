@@ -60,6 +60,10 @@ class Ball(pygame.sprite.Sprite):
     def get_velocity(self):
         return math.sqrt(self.dx**2 + self.dy**2)
 
+    def set_position(self, x, y):
+        self.px = x
+        self.py = y
+
     def get_movement_angle(self):
         return math.atan2(self.dy, self.dx)
 
@@ -106,6 +110,12 @@ def collision(a, b):
     """
     Implements elastic collisions between two ball objects through simple 2D-physics.
     """
+
+    a.set_position(a.get_center_x() - a.get_velocity() * math.cos(a.get_movement_angle()),
+                   a.get_center_y() - a.get_velocity() * math.sin(a.get_movement_angle()))
+
+    b.set_position(b.get_center_x() - b.get_velocity() * math.cos(b.get_movement_angle()),
+                   b.get_center_y() - b.get_velocity() * math.sin(b.get_movement_angle()))
 
     contact_angle = get_contact_angle(a, b)
 
