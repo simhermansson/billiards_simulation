@@ -48,11 +48,11 @@ class Ball(pygame.sprite.Sprite):
         K = 1/2 * mv^2. We remove m from both sides and solve for v. Finally we get that
         v = sqrt(vi^2 - 2 * mu * g * vi * dt).
         """
-        right_hand_side = 2 * self.table.get_kinetic_friction() * 9.81 * self.get_velocity() * dt
-        if right_hand_side > self.get_velocity()**2:
+        right_hand_side = 2 * self.table.get_kinetic_friction() * 9.81 * self.get_speed() * dt
+        if right_hand_side > self.get_speed()**2:
             self.set_velocity(0, 0)
         else:
-            v = math.sqrt(self.get_velocity()**2 - right_hand_side)
+            v = math.sqrt(self.get_speed() ** 2 - right_hand_side)
             self.set_velocity(v * math.cos(self.get_movement_angle()), v * math.sin(self.get_movement_angle()))
 
         self.px += self.dx
@@ -67,7 +67,7 @@ class Ball(pygame.sprite.Sprite):
         if self.py + self.get_radius() > self.table.get_bottom_edge():
             self.dy = -self.dy
 
-    def get_velocity(self):
+    def get_speed(self):
         return math.sqrt(self.dx**2 + self.dy**2)
 
     def set_position(self, x, y):
@@ -76,9 +76,6 @@ class Ball(pygame.sprite.Sprite):
 
     def get_movement_angle(self):
         return math.atan2(self.dy, self.dx)
-
-    def get_friction_angle(self):
-        return -math.atan2(self.dy, self.dx)
 
     def draw_self(self, display):
         """
@@ -95,9 +92,6 @@ class Ball(pygame.sprite.Sprite):
         """
         self.dx += force * math.cos(angle)
         self.dy += force * math.sin(angle)
-
-    def apply_work(self, work, angle):
-        pass
 
     def set_velocity(self, dx, dy):
         self.dx = dx
@@ -129,11 +123,11 @@ def collision(a, b):
 
     """
 
-    a.set_position(a.get_center_x() - a.get_velocity() * math.cos(a.get_movement_angle()),
-                   a.get_center_y() - a.get_velocity() * math.sin(a.get_movement_angle()))
+    a.set_position(a.get_center_x() - a.get_speed() * math.cos(a.get_movement_angle()),
+                   a.get_center_y() - a.get_speed() * math.sin(a.get_movement_angle()))
 
-    b.set_position(b.get_center_x() - b.get_velocity() * math.cos(b.get_movement_angle()),
-                   b.get_center_y() - b.get_velocity() * math.sin(b.get_movement_angle()))
+    b.set_position(b.get_center_x() - b.get_speed() * math.cos(b.get_movement_angle()),
+                   b.get_center_y() - b.get_speed() * math.sin(b.get_movement_angle()))
    """
 
     contact_angle = get_contact_angle(a, b)
@@ -146,17 +140,17 @@ def collision(a, b):
     a.px -= nx
     a.py -= ny
 
-    adx = (b.get_velocity() * math.cos(b.get_movement_angle() - contact_angle) * math.cos(contact_angle)
-           + a.get_velocity() * math.sin(a.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi/2))
+    adx = (b.get_speed() * math.cos(b.get_movement_angle() - contact_angle) * math.cos(contact_angle)
+           + a.get_speed() * math.sin(a.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi / 2))
 
-    ady = (b.get_velocity() * math.cos(b.get_movement_angle() - contact_angle) * math.sin(contact_angle)
-           + a.get_velocity() * math.sin(a.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi/2))
+    ady = (b.get_speed() * math.cos(b.get_movement_angle() - contact_angle) * math.sin(contact_angle)
+           + a.get_speed() * math.sin(a.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi / 2))
 
-    bdx = (a.get_velocity() * math.cos(a.get_movement_angle() - contact_angle) * math.cos(contact_angle)
-           + b.get_velocity() * math.sin(b.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi/2))
+    bdx = (a.get_speed() * math.cos(a.get_movement_angle() - contact_angle) * math.cos(contact_angle)
+           + b.get_speed() * math.sin(b.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi / 2))
 
-    bdy = (a.get_velocity() * math.cos(a.get_movement_angle() - contact_angle) * math.sin(contact_angle)
-           + b.get_velocity() * math.sin(b.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi/2))
+    bdy = (a.get_speed() * math.cos(a.get_movement_angle() - contact_angle) * math.sin(contact_angle)
+           + b.get_speed() * math.sin(b.get_movement_angle() - contact_angle) * math.sin(contact_angle + math.pi / 2))
 
     a.dx = adx
     a.dy = ady
