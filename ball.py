@@ -20,6 +20,8 @@ class Ball(pygame.sprite.Sprite):
         self.py = y
         self.dx = 0
         self.dy = 0
+        self.ax = 0
+        self.ay = 0
 
         self.table = table
         self.color = color
@@ -37,16 +39,16 @@ class Ball(pygame.sprite.Sprite):
 
         :param args: args[0]: DeltaTime, time since last tick.
         """
+
         dt = args[0]
+        mu = self.table.get_friction()  # Friction constant
+        self.ax = -self.dx * mu
+        self.ay = -self.dy * mu
+
+        self.dx += self.ax * dt
+        self.dy += self.ay * dt
         self.px += self.dx * dt
         self.py += self.dy * dt
-
-        self.dx = self.dx * (1 - self.table.get_friction())
-        self.dy = self.dy * (1 - self.table.get_friction())
-        if abs(self.dx) < 0.1:
-            self.dx = 0
-        if abs(self.dy) < 0.1:
-            self.dy = 0
 
         if self.px - Ball.get_radius() < self.table.get_left_edge():
             self.dx = -self.dx
@@ -66,6 +68,9 @@ class Ball(pygame.sprite.Sprite):
 
     def get_movement_angle(self):
         return math.atan2(self.dy, self.dx)
+
+    def get_friction_angle(self):
+        return -math.atan2(self.dy, self.dx)
 
     def draw_self(self, display):
         """
@@ -111,13 +116,24 @@ def collision(a, b):
     Implements elastic collisions between two ball objects through simple 2D-physics.
     """
 
+    """
+
     a.set_position(a.get_center_x() - a.get_velocity() * math.cos(a.get_movement_angle()),
                    a.get_center_y() - a.get_velocity() * math.sin(a.get_movement_angle()))
 
     b.set_position(b.get_center_x() - b.get_velocity() * math.cos(b.get_movement_angle()),
                    b.get_center_y() - b.get_velocity() * math.sin(b.get_movement_angle()))
+   """
 
     contact_angle = get_contact_angle(a, b)
+
+    # Get vector between the two balls and normalize
+    nx = (b.px - a.px) / distance(a, b)
+    ny = (b.py - a.py) / distance(a, b)
+
+    # Fix a bug where they stick
+    a.px -= nx
+    a.py -= ny
 
     adx = (b.get_velocity() * math.cos(b.get_movement_angle() - contact_angle) * math.cos(contact_angle)
            + a.get_velocity() * math.sin(a.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi/2))
