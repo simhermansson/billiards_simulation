@@ -19,7 +19,7 @@ class Ball(pygame.sprite.Sprite):
         self.table = table
 
         self.RADIUS = 20
-        self.MASS = 0.16
+        self.MASS = 1
         self.color = color
 
         self.px = x
@@ -35,21 +35,28 @@ class Ball(pygame.sprite.Sprite):
     def update(self, *args, **kwargs) -> None:
         """
         Updates the values for ball. Applies friction and handles wall-collisions.
-
         :param args: args[0]: DeltaTime, time since last tick.
         """
         dt = args[0]
-        mu = self.table.get_friction()  # Friction constant
 
-        # a = F/m = m*g*mu/m = g * mu
-        force_friction = 9.81 * mu * self.MASS
-        self.ax = -self.dx * force_friction
-        self.ay = -self.dy * force_friction
+        """
+        Force by friction is equal to the kinetic friction constant (mu) times the normal force, which on this
+        horizontal surface is mg. Work done by this force is the force times the distance, where the
+        distance is equal to the initial velocity times the delta time.
+        
+        Now we have the work. This work is equal to the change in kinetic energy. So W = Ki - Kf. Where 
+        K = 1/2 * mv^2. We remove m from both sides and solve for v. Finally we get that
+        v = sqrt(vi^2 - 2 * mu * g * vi * dt).
+        """
+        right_hand_side = 2 * self.table.get_kinetic_friction() * 9.81 * self.get_velocity() * dt
+        if right_hand_side > self.get_velocity()**2:
+            self.set_velocity(0, 0)
+        else:
+            v = math.sqrt(self.get_velocity()**2 - right_hand_side)
+            self.set_velocity(v * math.cos(self.get_movement_angle()), v * math.sin(self.get_movement_angle()))
 
-        self.dx += self.ax * dt
-        self.dy += self.ay * dt
-        self.px += self.dx * dt
-        self.py += self.dy * dt
+        self.px += self.dx
+        self.py += self.dy
 
         if self.px - self.RADIUS < self.table.get_left_edge():
             self.dx = -self.dx
@@ -88,6 +95,9 @@ class Ball(pygame.sprite.Sprite):
         """
         self.dx += force * math.cos(angle)
         self.dy += force * math.sin(angle)
+
+    def apply_work(self, work, angle):
+        pass
 
     def set_velocity(self, dx, dy):
         self.dx = dx

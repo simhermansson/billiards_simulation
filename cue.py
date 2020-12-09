@@ -37,7 +37,7 @@ class Cue(pygame.sprite.Sprite):
         self.nearest_ball = self.get_nearest_ball(ball_group)
 
         if self.nearest_ball:
-            left, middle, right = pygame.mouse.get_pressed(num_buttons=3)
+            left = pygame.mouse.get_pressed(num_buttons=3)[0]
 
             if self.state == State.DRAWING:
                 self.x, self.y = pygame.mouse.get_pos()

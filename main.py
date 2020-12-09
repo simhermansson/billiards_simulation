@@ -72,6 +72,7 @@ def run_game(game_display, game_clock):
 
 if __name__ == '__main__':
     pygame.init()
+
     display = pygame.display.set_mode((1600, 900))
     pygame.display.set_caption("Pool")
     clock = pygame.time.Clock()
