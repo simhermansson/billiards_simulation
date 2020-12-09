@@ -16,8 +16,10 @@ class Cue(pygame.sprite.Sprite):
         """
         pygame.sprite.Sprite.__init__(self)
 
+        self.MASS = 0.05
         self.x = 0
         self.y = 0
+
         self.draw_distance = 0
         self.nearest_ball = None
         self.state = State.AIMING
@@ -46,7 +48,7 @@ class Cue(pygame.sprite.Sprite):
                     self.x = self.x + (self.draw_distance - self.nearest_ball.get_radius()) * math.cos(angle)
                     self.y = self.y + (self.draw_distance - self.nearest_ball.get_radius()) * math.sin(angle)
                     pygame.mouse.set_pos((self.x, self.y))
-                    self.nearest_ball.apply_force(self.draw_distance * 0.05, angle)
+                    self.nearest_ball.apply_force(self.draw_distance * self.MASS, angle)
                     self.state = State.AIMING
             elif self.state == State.AIMING:
                 self.x, self.y = pygame.mouse.get_pos()
