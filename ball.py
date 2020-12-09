@@ -16,6 +16,12 @@ class Ball(pygame.sprite.Sprite):
         """
         pygame.sprite.Sprite.__init__(self)
 
+        self.table = table
+
+        self.RADIUS = 20
+        self.MASS = 0.16
+        self.color = color
+
         self.px = x
         self.py = y
         self.dx = 0
@@ -23,15 +29,8 @@ class Ball(pygame.sprite.Sprite):
         self.ax = 0
         self.ay = 0
 
-        self.table = table
-        self.color = color
-        self.rect = pygame.Rect(x, y, Ball.get_radius(), Ball.get_radius())
-        self.RADIUS = Ball.get_radius()
-        self.MASS = 0.16
-
-    @staticmethod
-    def get_radius():
-        return 20
+    def get_radius(self):
+        return self.RADIUS
 
     def update(self, *args, **kwargs) -> None:
         """
@@ -50,13 +49,13 @@ class Ball(pygame.sprite.Sprite):
         self.px += self.dx * dt
         self.py += self.dy * dt
 
-        if self.px - Ball.get_radius() < self.table.get_left_edge():
+        if self.px - self.RADIUS < self.table.get_left_edge():
             self.dx = -self.dx
-        if self.px + Ball.get_radius() > self.table.get_right_edge():
+        if self.px + self.get_radius() > self.table.get_right_edge():
             self.dx = -self.dx
-        if self.py - Ball.get_radius() < self.table.get_top_edge():
+        if self.py - self.get_radius() < self.table.get_top_edge():
             self.dy = -self.dy
-        if self.py + Ball.get_radius() > self.table.get_bottom_edge():
+        if self.py + self.get_radius() > self.table.get_bottom_edge():
             self.dy = -self.dy
 
     def get_velocity(self):
@@ -78,8 +77,8 @@ class Ball(pygame.sprite.Sprite):
 
         :param display: Game screen to draw on.
         """
-        pygame.gfxdraw.aacircle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
-        pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), Ball.get_radius(), pygame.Color(self.color))
+        pygame.gfxdraw.aacircle(display, int(self.px), int(self.py), self.get_radius(), pygame.Color(self.color))
+        pygame.gfxdraw.filled_circle(display, int(self.px), int(self.py), self.get_radius(), pygame.Color(self.color))
 
     def apply_force(self, force, angle):
         """
@@ -104,7 +103,7 @@ def distance(a, b):
 
 
 def overlaps(a, b):
-    return distance(a, b) <= Ball.get_radius() * 2
+    return distance(a, b) <= a.get_radius() * 2
 
 
 def get_contact_angle(a, b):
