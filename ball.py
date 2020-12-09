@@ -39,11 +39,13 @@ class Ball(pygame.sprite.Sprite):
 
         :param args: args[0]: DeltaTime, time since last tick.
         """
-
         dt = args[0]
         mu = self.table.get_friction()  # Friction constant
-        self.ax = -self.dx * mu
-        self.ay = -self.dy * mu
+
+        # a = F/m = m*g*mu/m = g * mu
+        force_friction = 9.81 * mu * self.MASS
+        self.ax = -self.dx * force_friction
+        self.ay = -self.dy * force_friction
 
         self.dx += self.ax * dt
         self.dy += self.ay * dt
