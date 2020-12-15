@@ -93,7 +93,7 @@ class Cue(pygame.sprite.Sprite):
             front_right = (self.x + math.cos(angle) - front_width * math.cos(angle + math.pi / 2),
                            self.y + math.sin(angle) - front_width * math.sin(angle + math.pi / 2))
 
-            # Draws both anti-aliased edge and a filled polygon to get an anti-aliased circle.
+            # Draws both anti-aliased edge and a filled polygon to get an anti-aliased polygon.
             pygame.gfxdraw.aapolygon(screen, [back_right, back_left, front_left, front_right], (66, 13, 9))
             pygame.gfxdraw.filled_polygon(screen, [back_right, back_left, front_left, front_right], (66, 13, 9))
 
