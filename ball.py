@@ -49,7 +49,7 @@ class Ball(pygame.sprite.Sprite):
         v = sqrt(vi^2 - 2 * mu * g * vi * dt).
         """
         right_hand_side = 2 * self.table.get_kinetic_friction() * 9.81 * self.get_speed() * dt
-        if right_hand_side > self.get_speed()**2:
+        if right_hand_side > self.get_speed() ** 2:
             self.set_velocity(0, 0)
         else:
             v = math.sqrt(self.get_speed() ** 2 - right_hand_side)
@@ -120,26 +120,16 @@ def collision(a, b):
     """
     Implements elastic collisions between two ball objects through simple 2D-physics.
     """
-
-    """
-
-    a.set_position(a.get_center_x() - a.get_speed() * math.cos(a.get_movement_angle()),
-                   a.get_center_y() - a.get_speed() * math.sin(a.get_movement_angle()))
-
-    b.set_position(b.get_center_x() - b.get_speed() * math.cos(b.get_movement_angle()),
-                   b.get_center_y() - b.get_speed() * math.sin(b.get_movement_angle()))
-   """
-
     contact_angle = get_contact_angle(a, b)
 
     # Get vector between the two balls and normalize
     nx = (b.px - a.px) / distance(a, b)
     ny = (b.py - a.py) / distance(a, b)
-
-    # Fix a bug where they stick
+    # Moving the balls out so that they are not on top of each other anymore.
     a.px -= nx
     a.py -= ny
 
+    # Calculating final velocity for the two balls.
     adx = (b.get_speed() * math.cos(b.get_movement_angle() - contact_angle) * math.cos(contact_angle)
            + a.get_speed() * math.sin(a.get_movement_angle() - contact_angle) * math.cos(contact_angle + math.pi / 2))
 
