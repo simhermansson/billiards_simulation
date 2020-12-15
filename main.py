@@ -51,7 +51,7 @@ def run_game(game_display, game_clock):
     sprite_group.add(white)
 
     while True:
-        delta_time = game_clock.tick(60) / 10
+        delta_time = game_clock.tick(60)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

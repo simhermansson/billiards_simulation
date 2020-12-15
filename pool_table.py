@@ -45,7 +45,7 @@ class PoolTable(pygame.sprite.Sprite):
         self.EDGE_BORDER = screen_width // 10
         self.HEIGHT = screen_height - self.EDGE_BORDER
         self.WIDTH = self.HEIGHT // 2
-        self.KINETIC_FRICTION = 0.003
+        self.KINETIC_FRICTION = 0.0003
 
         self.table = pygame.Surface([self.WIDTH, self.HEIGHT])
         self.table.fill((54, 89, 74))
