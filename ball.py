@@ -60,12 +60,16 @@ class Ball(pygame.sprite.Sprite):
 
         if self.px - self.RADIUS < self.table.get_left_edge():
             self.dx = -self.dx
+            self.px = self.table.get_left_edge() + self.RADIUS
         if self.px + self.get_radius() > self.table.get_right_edge():
             self.dx = -self.dx
+            self.px = self.table.get_right_edge() - self.RADIUS
         if self.py - self.get_radius() < self.table.get_top_edge():
             self.dy = -self.dy
+            self.py = self.table.get_top_edge() + self.RADIUS
         if self.py + self.get_radius() > self.table.get_bottom_edge():
             self.dy = -self.dy
+            self.py = self.table.get_bottom_edge() - self.RADIUS
 
     def get_speed(self):
         return math.sqrt(self.dx**2 + self.dy**2)
